@@ -1,8 +1,7 @@
 'use strict';
 
-const bleNusServiceUUID  = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const bleNusCharRXUUID   = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
-const bleNusCharTXUUID   = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+const bleNusServiceUUID  = "50300001-0023-4bd4-bbd5-a6920e4c5653";
+
 const MTU = 20;
 
 var bleDevice;
@@ -59,20 +58,17 @@ function connect() {
         nusService = service;
         console.log('Found NUS service: ' + service.uuid);
     })
-    .then(() => {
+    .then(async () => {
         console.log('Locate RX characteristic');
-        return nusService.getCharacteristic(bleNusCharRXUUID);
+        return await nusService.getCharacteristics();
     })
     .then(characteristic => {
-        rxCharacteristic = characteristic;
+        rxCharacteristic = characteristic.find(x=>x?.properties.write);
         console.log('Found RX characteristic');
-    })
-    .then(() => {
-        console.log('Locate TX characteristic');
-        return nusService.getCharacteristic(bleNusCharTXUUID);
+        retuen characteristic;
     })
     .then(characteristic => {
-        txCharacteristic = characteristic;
+        txCharacteristic = characteristic.find(x=>x?.properties.notify);
         console.log('Found TX characteristic');
     })
     .then(() => {
